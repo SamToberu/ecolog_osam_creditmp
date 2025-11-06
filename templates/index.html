@@ -1,0 +1,268 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OSAMCA - Agricultural Credit Agency</title>
+    <link rel="stylesheet" href="{% static 'index.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo-placeholder">
+          <img class="logo-img" src=" {% static 'osamca-logo.jpg' %}" />
+        </div>
+        <div class="office-add">
+          <h2>Ogun State Agriculturaland Multipurpose Credit Agency</h2>
+          <p class="add-line1">Room 356 - 347, Block B</p>
+          <p class="add-line2">Ogun State Secretariat, Oke-Mosan</p>
+          <p class="add-line3">Abeokuta, Ogun State</p>
+        </div>
+        <div class="auth-buttons">
+          <button class="btn btn-outline" id="signInBtn">Sign In</button>
+          <button class="btn btn-filled" id="signUpBtn">Sign Up</button>
+        </div>
+      </header>
+
+      <section class="hero">
+        <h1>Empowering Agricultural Growth</h1>
+        <p>
+          Ogun State Agricultural and Multipurpose Credit Agency provides credit
+          facilities to small and medium scale agricultural and business
+          enterprises to foster economic development.
+        </p>
+        <a href="login.html" style="text-decoration: none">
+          <button class="cta-button">Apply for Credit</button>
+        </a>
+
+        <div class="navigation">
+          <button class="nav-btn">About Us</button>
+          <button class="nav-btn">Staff Profiles</button>
+          <button class="nav-btn">Empowerments</button>
+          <button class="nav-btn">News</button>
+          <a href="clientpool2.html" style="text-decoration: none">
+            <button class="nav-btn">Client Profiles</button>
+          </a>
+          <button class="nav-btn">Application Form</button>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="feature-card">
+          <div class="feature-icon">🌱</div>
+          <h3>Agricultural Loans</h3>
+          <p>
+            Financial support for farmers and agribusinesses to boost production
+            and productivity.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💼</div>
+          <h3>Business Credit</h3>
+          <p>
+            Credit facilities for small and medium enterprises to expand
+            operations and create jobs.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Growth Support</h3>
+          <p>
+            Comprehensive support services to ensure sustainable growth of
+            beneficiary enterprises.
+          </p>
+        </div>
+      </section>
+
+      <footer>
+        <p>
+          Â© 2023 Ogun State Agricultural and Multipurpose Credit Agency. All
+          rights reserved.
+        </p>
+      </footer>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div class="modal" id="signUpModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Create Your Account</h2>
+          <button class="close-btn" id="closeModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="progress-bar">
+            <div class="progress" id="signupProgress"></div>
+          </div>
+
+          <div class="step-indicator">
+            <div class="step active" id="step1">1</div>
+            <div class="step" id="step2">2</div>
+            <div class="step" id="step3">3</div>
+            <div class="step" id="step4">4</div>
+          </div>
+
+          <!-- Step 1: Personal Information -->
+          <div class="form-step active" id="step1Form">
+            <h3>Personal Information</h3>
+            <p>Please provide your personal details</p>
+
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input
+                type="text"
+                id="lastName"
+                class="form-control"
+                placeholder="Enter your last name"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="middleName">Middle Name</label>
+              <input
+                type="text"
+                id="middleName"
+                class="form-control"
+                placeholder="Enter your middle name"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input
+                type="text"
+                id="firstName"
+                class="form-control"
+                placeholder="Enter your first name"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="country">Country of Residence</label>
+              <select id="country" class="form-control">
+                <option value="">Select your country</option>
+                <option value="nigeria">Nigeria</option>
+                <option value="ghana">Ghana</option>
+                <option value="kenya">Kenya</option>
+                <option value="south-africa">South Africa</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-footer">
+              <div></div>
+              <!-- Empty div for spacing -->
+              <button class="btn-primary" id="step1Next">Next</button>
+            </div>
+          </div>
+
+          <!-- Step 2: Phone Verification -->
+          <div class="form-step" id="step2Form">
+            <h3>Phone Verification</h3>
+            <p>We'll send a verification code to your phone</p>
+
+            <div class="form-group">
+              <label for="phoneNumber">Phone Number</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                class="form-control"
+                placeholder="Enter your phone number"
+              />
+            </div>
+
+            <div class="form-footer">
+              <button class="btn-secondary" id="step2Back">Back</button>
+              <button class="btn-primary" id="step2Next">Send Code</button>
+            </div>
+          </div>
+
+          <!-- Step 3: Code Verification -->
+          <div class="form-step" id="step3Form">
+            <h3>Verify Your Phone</h3>
+            <p>Enter the 6-digit code sent to your phone</p>
+
+            <div class="verification-code">
+              <input type="text" class="code-input" maxlength="1" id="code1" />
+              <input type="text" class="code-input" maxlength="1" id="code2" />
+              <input type="text" class="code-input" maxlength="1" id="code3" />
+              <input type="text" class="code-input" maxlength="1" id="code4" />
+              <input type="text" class="code-input" maxlength="1" id="code5" />
+              <input type="text" class="code-input" maxlength="1" id="code6" />
+            </div>
+
+            <div class="resend-code" id="resendCode">
+              Didn't receive the code? Resend in
+              <span id="countdown">60</span> seconds
+            </div>
+
+            <div class="form-footer">
+              <button class="btn-secondary" id="step3Back">Back</button>
+              <button class="btn-primary" id="step3Next">Verify</button>
+            </div>
+          </div>
+
+          <!-- Step 4: Set Password -->
+          <div class="form-step" id="step4Form">
+            <h3>Set Your Password</h3>
+            <p>Create a secure password for your account</p>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                class="form-control"
+                placeholder="Create a password"
+              />
+              <div class="password-strength">
+                <div class="password-strength-bar" id="passwordStrength"></div>
+              </div>
+              <div class="password-requirements">
+                <div class="requirement" id="reqLength">
+                  At least 8 characters
+                </div>
+                <div class="requirement" id="reqUppercase">
+                  One uppercase letter
+                </div>
+                <div class="requirement" id="reqLowercase">
+                  One lowercase letter
+                </div>
+                <div class="requirement" id="reqNumber">One number</div>
+                <div class="requirement" id="reqSpecial">
+                  One special character
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                class="form-control"
+                placeholder="Confirm your password"
+              />
+              <div
+                id="passwordMatch"
+                style="margin-top: 5px; font-size: 0.85rem"
+              ></div>
+            </div>
+
+            <div class="form-footer">
+              <button class="btn-secondary" id="step4Back">Back</button>
+              <button class="btn-primary" id="step4Submit">
+                Create Account
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="scripts/index.js"></script>
+
+    <script src="scripts/userstoreupdate.js"></script>
+  </body>
+</html>

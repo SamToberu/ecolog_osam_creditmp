@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CreditPro - Account Authentication</title>
+    <style>
+      :root {
+        --primary: #2c3e50;
+        --secondary: #3498db;
+        --accent: #e74c3c;
+        --light: #ecf0f1;
+        --dark: #2c3e50;
+        --success: #2ecc71;
+        --warning: #f39c12;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        color: var(--dark);
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        font-size: 1.1rem;
+        color: #555;
+      }
+
+      .auth-container {
+        display: flex;
+        width: 100%;
+        max-width: 900px;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .welcome-section {
+        flex: 1;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--secondary) 100%
+        );
+        color: white;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .welcome-section h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+
+      .welcome-section p {
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .features {
+        list-style: none;
+        margin-top: 20px;
+      }
+
+      .features li {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+      }
+
+      .features li::before {
+        content: "✓";
+        margin-right: 10px;
+        background: var(--success);
+        color: white;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+      }
+
+      .form-section {
+        flex: 1;
+        padding: 40px;
+      }
+
+      .form-container {
+        width: 100%;
+      }
+
+      .form-toggle {
+        display: flex;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .toggle-btn {
+        padding: 10px 20px;
+        background: none;
+        border: none;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #777;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .toggle-btn.active {
+        color: var(--secondary);
+      }
+
+      .toggle-btn.active::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--secondary);
+      }
+
+      .form {
+        display: none;
+      }
+
+      .form.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--dark);
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus {
+        border-color: var(--secondary);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+      }
+
+      .password-strength {
+        height: 5px;
+        background: #eee;
+        border-radius: 5px;
+        margin-top: 5px;
+        overflow: hidden;
+      }
+
+      .strength-meter {
+        height: 100%;
+        width: 0;
+        transition: width 0.3s ease;
+      }
+
+      .password-requirements {
+        margin-top: 10px;
+        font-size: 0.85rem;
+        color: #777;
+      }
+
+      .requirement {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+
+      .requirement.met {
+        color: var(--success);
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 20px;
+      }
+
+      .checkbox-group input {
+        margin-right: 10px;
+        margin-top: 3px;
+      }
+
+      .checkbox-group label {
+        font-size: 0.9rem;
+        color: #555;
+      }
+
+      .checkbox-group a {
+        color: var(--secondary);
+        text-decoration: none;
+      }
+
+      .btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: var(--secondary);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .btn:hover {
+        background: #2980b9;
+      }
+
+      .form-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: #777;
+      }
+
+      .form-footer a {
+        color: var(--secondary);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .message {
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        display: none;
+      }
+
+      .message.success {
+        background: rgba(46, 204, 113, 0.1);
+        color: var(--success);
+        border: 1px solid var(--success);
+        display: block;
+      }
+
+      .message.error {
+        background: rgba(231, 76, 60, 0.1);
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        display: block;
+      }
+
+      .verification-section {
+        display: none;
+        text-align: center;
+        padding: 30px;
+      }
+
+      .verification-section.active {
+        display: block;
+      }
+
+      .verification-icon {
+        font-size: 4rem;
+        color: var(--success);
+        margin-bottom: 20px;
+      }
+
+      .verification-section h2 {
+        margin-bottom: 15px;
+        color: var(--dark);
+      }
+
+      .verification-section p {
+        color: #555;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      @media (max-width: 768px) {
+        .auth-container {
+          flex-direction: column;
+        }
+
+        .welcome-section {
+          padding: 30px;
+        }
+
+        .form-section {
+          padding: 30px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Ogun State Agricultural and Multipurpose Credit Agency</h1>
+        <p>...empowering small and medium scale businesses</p>
+      </div>
+
+      <div class="auth-container">
+        <div class="welcome-section">
+          <h2>
+            Welcome to Ogun State Agricultural and Multipurpose Credit Agency
+          </h2>
+          <p>
+            We are here to empower, small, medium scale agricultural and
+            business enterprises.
+          </p>
+          <ul class="features">
+            <li>Sign up easily with your email</li>
+            <li>provide 2 civil servant guarantors</li>
+            <li>Get visited by our officer and</li>
+            <li>Be empowered within 2 weeks</li>
+          </ul>
+        </div>
+
+        <div class="form-section">
+          <div class="form-container">
+            <div class="form-toggle">
+              <button class="toggle-btn active" id="signin-toggle">
+                Sign In
+              </button>
+              <button class="toggle-btn" id="signup-toggle">Sign Up</button>
+            </div>
+
+            <div class="message" id="message"></div>
+
+            <form class="form active" id="signin-form">
+              <div class="form-group">
+                <label for="signin-email">Email Address</label>
+                <input type="email" id="signin-email" required />
+              </div>
+
+              <div class="form-group">
+                <label for="signin-password">Password</label>
+                <input type="password" id="signin-password" required />
+              </div>
+
+              <div class="form-group">
+                <button type="submit" class="btn">Sign In</button>
+              </div>
+
+              <div class="form-footer">
+                <a href="#" id="forgot-password">Forgot your password?</a>
+              </div>
+            </form>
+
+            <form class="form" id="signup-form">
+              <div class="form-group">
+                <label for="signup-email">Email Address</label>
+                <input type="email" id="signup-email" required />
+              </div>
+
+              <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" required />
+                <div class="password-strength">
+                  <div
+                    class="strength-meter"
+                    id="password-strength-meter"
+                  ></div>
+                </div>
+                <div class="password-requirements">
+                  <div class="requirement" id="length-req">
+                    At least 8 characters
+                  </div>
+                  <div class="requirement" id="uppercase-req">
+                    One uppercase letter
+                  </div>
+                  <div class="requirement" id="lowercase-req">
+                    One lowercase letter
+                  </div>
+                  <div class="requirement" id="number-req">One number</div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" required />
+              </div>
+
+              <div class="checkbox-group">
+                <input type="checkbox" id="terms" required />
+                <label for="terms"
+                  >I agree to the <a href="#">Terms of Service</a> and
+                  <a href="#">Privacy Policy</a></label
+                >
+              </div>
+
+              <div class="form-group">
+                <button type="submit" class="btn">Create Account</button>
+              </div>
+            </form>
+
+            <div class="verification-section" id="verification-section">
+              <div class="verification-icon">✓</div>
+              <h2>Verify Your Email</h2>
+              <p>
+                We've sent a verification link to your email address. Please
+                check your inbox and click the link to verify your account.
+              </p>
+              <p>If you don't see the email, check your spam folder.</p>
+              <button class="btn" id="resend-verification">
+                Resend Verification Email
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // DOM Elements
+      const signinToggle = document.getElementById("signin-toggle");
+      const signupToggle = document.getElementById("signup-toggle");
+      const signinForm = document.getElementById("signin-form");
+      const signupForm = document.getElementById("signup-form");
+      const messageDiv = document.getElementById("message");
+      const verificationSection = document.getElementById(
+        "verification-section"
+      );
+      const resendVerificationBtn = document.getElementById(
+        "resend-verification"
+      );
+      const passwordInput = document.getElementById("signup-password");
+      const passwordStrengthMeter = document.getElementById(
+        "password-strength-meter"
+      );
+      const lengthReq = document.getElementById("length-req");
+      const uppercaseReq = document.getElementById("uppercase-req");
+      const lowercaseReq = document.getElementById("lowercase-req");
+      const numberReq = document.getElementById("number-req");
+
+      // Toggle between Sign In and Sign Up forms
+      signinToggle.addEventListener("click", () => {
+        signinToggle.classList.add("active");
+        signupToggle.classList.remove("active");
+        signinForm.classList.add("active");
+        signupForm.classList.remove("active");
+        messageDiv.style.display = "none";
+      });
+
+      signupToggle.addEventListener("click", () => {
+        signupToggle.classList.add("active");
+        signinToggle.classList.remove("active");
+        signupForm.classList.add("active");
+        signinForm.classList.remove("active");
+        messageDiv.style.display = "none";
+      });
+
+      // Password strength checker
+      passwordInput.addEventListener("input", function () {
+        const password = this.value;
+        let strength = 0;
+
+        // Check password requirements
+        const hasLength = password.length >= 8;
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasLowercase = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+
+        // Update requirement indicators
+        updateRequirement(lengthReq, hasLength);
+        updateRequirement(uppercaseReq, hasUppercase);
+        updateRequirement(lowercaseReq, hasLowercase);
+        updateRequirement(numberReq, hasNumber);
+
+        // Calculate strength
+        if (hasLength) strength += 25;
+        if (hasUppercase) strength += 25;
+        if (hasLowercase) strength += 25;
+        if (hasNumber) strength += 25;
+
+        // Update strength meter
+        passwordStrengthMeter.style.width = `${strength}%`;
+
+        // Update color based on strength
+        if (strength < 50) {
+          passwordStrengthMeter.style.backgroundColor = "#e74c3c";
+        } else if (strength < 75) {
+          passwordStrengthMeter.style.backgroundColor = "#f39c12";
+        } else {
+          passwordStrengthMeter.style.backgroundColor = "#2ecc71";
+        }
+      });
+
+      function updateRequirement(element, condition) {
+        if (condition) {
+          element.classList.add("met");
+        } else {
+          element.classList.remove("met");
+        }
+      }
+
+      // Form submission handlers
+      signinForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const email = document.getElementById("signin-email").value;
+        const password = document.getElementById("signin-password").value;
+
+        // In a real application, you would send this data to your backend
+        // For demo purposes, we'll simulate authentication
+        if (email && password) {
+          showMessage("Sign in successful! Redirecting...", "success");
+          // In a real app, you would redirect to dashboard after successful authentication
+          setTimeout(() => {
+            // window.location.href = 'dashboard.html';
+            showMessage(
+              "This is a demo. In a real app, you would be redirected to the dashboard.",
+              "success"
+            );
+          }, 1500);
+        } else {
+          showMessage("Please enter both email and password.", "error");
+        }
+      });
+
+      signupForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const email = document.getElementById("signup-email").value;
+        const password = document.getElementById("signup-password").value;
+        const confirmPassword =
+          document.getElementById("confirm-password").value;
+        const termsChecked = document.getElementById("terms").checked;
+
+        // Validation
+        if (!email || !password || !confirmPassword) {
+          showMessage("Please fill in all fields.", "error");
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showMessage("Passwords do not match.", "error");
+          return;
+        }
+
+        if (!termsChecked) {
+          showMessage(
+            "Please agree to the Terms of Service and Privacy Policy.",
+            "error"
+          );
+          return;
+        }
+
+        // Check password strength
+        const hasLength = password.length >= 8;
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasLowercase = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+
+        if (!hasLength || !hasUppercase || !hasLowercase || !hasNumber) {
+          showMessage("Password does not meet all requirements.", "error");
+          return;
+        }
+
+        // In a real application, you would send this data to your backend
+        // For demo purposes, we'll simulate account creation and email verification
+        showMessage(
+          "Account created successfully! Sending verification email...",
+          "success"
+        );
+
+        setTimeout(() => {
+          // Hide the signup form and show verification section
+          signupForm.style.display = "none";
+          verificationSection.classList.add("active");
+        }, 1500);
+      });
+
+      // Resend verification email
+      resendVerificationBtn.addEventListener("click", function () {
+        showMessage("Verification email sent!", "success");
+      });
+
+      // Forgot password
+      document
+        .getElementById("forgot-password")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          showMessage(
+            "Password reset link would be sent to your email in a real application.",
+            "success"
+          );
+        });
+
+      // Utility function to show messages
+      function showMessage(text, type) {
+        messageDiv.textContent = text;
+        messageDiv.className = "message " + type;
+        messageDiv.style.display = "block";
+
+        // Scroll to message
+        messageDiv.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OSAMCA Loan Application Form</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f5f5f5;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      header {
+        background-color: #1a472a;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 5px;
+      }
+
+      h2 {
+        font-size: 18px;
+        margin: 25px 0 15px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #ddd;
+        color: #1a472a;
+      }
+
+      h3 {
+        font-size: 16px;
+        margin: 15px 0 10px;
+        color: #2d5a3d;
+      }
+
+      .form-section {
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .inline-group {
+        display: flex;
+        gap: 15px;
+      }
+
+      .inline-group .form-group {
+        flex: 1;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f2f2f2;
+        font-weight: 600;
+      }
+
+      .checkbox-group {
+        display: flex;
+        gap: 20px;
+        margin-top: 10px;
+      }
+
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .checkbox-item input {
+        width: auto;
+      }
+
+      .note {
+        font-style: italic;
+        color: #666;
+        font-size: 14px;
+        margin-top: 5px;
+      }
+
+      .signature-area {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px dashed #ddd;
+      }
+
+      .signature-line {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+      }
+
+      .signature-field {
+        width: 48%;
+      }
+
+      .btn-container {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 30px 0;
+        padding: 0 20px;
+      }
+
+      .btn {
+        padding: 12px 25px;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s;
+      }
+
+      .btn-submit {
+        background-color: #1a472a;
+        color: white;
+      }
+
+      .btn-submit:hover {
+        background-color: #2d5a3d;
+      }
+
+      .btn-download {
+        background-color: #2c3e50;
+        color: white;
+      }
+
+      .btn-download:hover {
+        background-color: #34495e;
+      }
+
+      .btn-reset {
+        background-color: #7f8c8d;
+        color: white;
+      }
+
+      .btn-reset:hover {
+        background-color: #95a5a6;
+      }
+
+      @media (max-width: 768px) {
+        .inline-group {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .signature-line {
+          flex-direction: column;
+        }
+
+        .signature-field {
+          width: 100%;
+          margin-bottom: 15px;
+        }
+
+        .btn-container {
+          flex-direction: column;
+        }
+      }
+
+      /* Print-specific styles */
+      @media print {
+        body {
+          background-color: white;
+          padding: 0;
+        }
+
+        .container {
+          box-shadow: none;
+          border-radius: 0;
+        }
+
+        .btn-container {
+          display: none;
+        }
+      }
+
+      .success-message {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 12px;
+        border-radius: 4px;
+        margin: 15px 20px;
+        text-align: center;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>OGUN STATE AGRICULTURAL AND MULTIPURPOSE CREDIT AGENCY (OSAMCA)</h1>
+        <h2>LOAN APPLICATION FORM</h2>
+      </header>
+
+      <div class="success-message" id="successMessage">
+        Form submitted successfully! You can now download the completed form.
+      </div>
+
+      <form id="loanApplicationForm">
+        <!-- Section 1: Personal Information -->
+        <section class="form-section">
+          <h2>1 PERSONAL INFORMATION</h2>
+
+          <div class="inline-group">
+            <div class="form-group">
+              <label for="applicantName"
+                >Applicant's Name (Mr/Mrs/Miss/Dr/Prof)</label
+              >
+              <input
+                type="text"
+                id="applicantName"
+                name="applicantName"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="groupName">Name of Group (if any)</label>
+              <input type="text" id="groupName" name="groupName" />
+            </div>
+          </div>
+
+          <div class="inline-group">
+            <div class="form-group">
+              <label for="dateOfBirth">Date of Birth (DD/MM/YY)</label>
+              <input
+                type="text"
+                id="dateOfBirth"
+                name="dateOfBirth"
+                placeholder="DD/MM/YY"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="maritalStatus">Marital Status</label>
+              <select id="maritalStatus" name="maritalStatus" required>
+                <option value="">Select Status</option>
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+                <option value="widow">Widow</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Business Details -->
+        <section class="form-section">
+          <h2>2 BUSINESS DETAILS</h2>
+
+          <div class="form-group">
+            <label for="businessName">Business Name</label>
+            <input type="text" id="businessName" name="businessName" required />
+          </div>
+
+          <div class="form-group">
+            <label for="businessAddress">Address (Attach sketch map)</label>
+            <textarea
+              id="businessAddress"
+              name="businessAddress"
+              rows="3"
+            ></textarea>
+            <p class="note">NB: Attach sketch map</p>
+          </div>
+        </section>
+
+        <!-- Section 3: Particulars of Proprietors -->
+        <section class="form-section">
+          <h2>3 PARTICULARS OF PROPRIETORS</h2>
+          <p>Name of director(s)/Partner(s)/Official(s)</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Telephone Nr.</th>
+                <th>Address</th>
+                <th>Designation</th>
+                <th>Nature of ownership</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="text" name="proprietorName1" /></td>
+                <td><input type="text" name="proprietorPhone1" /></td>
+                <td><input type="text" name="proprietorAddress1" /></td>
+                <td><input type="text" name="proprietorDesignation1" /></td>
+                <td><input type="text" name="proprietorOwnership1" /></td>
+              </tr>
+              <tr>
+                <td><input type="text" name="proprietorName2" /></td>
+                <td><input type="text" name="proprietorPhone2" /></td>
+                <td><input type="text" name="proprietorAddress2" /></td>
+                <td><input type="text" name="proprietorDesignation2" /></td>
+                <td><input type="text" name="proprietorOwnership2" /></td>
+              </tr>
+              <tr>
+                <td><input type="text" name="proprietorName3" /></td>
+                <td><input type="text" name="proprietorPhone3" /></td>
+                <td><input type="text" name="proprietorAddress3" /></td>
+                <td><input type="text" name="proprietorDesignation3" /></td>
+                <td><input type="text" name="proprietorOwnership3" /></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="note">
+            NB: Attach memorandum, Articles of Association, Board of directors
+            resolution, minutes, etc
+          </p>
+        </section>
+
+        <!-- Section 4: Loan Particulars -->
+        <section class="form-section">
+          <h2>4 LOAN PARTICULARS</h2>
+
+          <div class="inline-group">
+            <div class="form-group">
+              <label>Business Sector:</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="sectorTrade"
+                    name="businessSector"
+                    value="trade"
+                  />
+                  <label for="sectorTrade">Trade</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="sectorProduction"
+                    name="businessSector"
+                    value="production"
+                  />
+                  <label for="sectorProduction">Production</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="sectorAgriculture"
+                    name="businessSector"
+                    value="agriculture"
+                  />
+                  <label for="sectorAgriculture">Agriculture</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="sectorOthers"
+                    name="businessSector"
+                    value="others"
+                  />
+                  <label for="sectorOthers">Others</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="loanCycle">Loan Cycle Nr.</label>
+              <input type="text" id="loanCycle" name="loanCycle" />
+            </div>
+          </div>
+
+          <div class="inline-group">
+            <div class="form-group">
+              <label for="amountApplied">Amount applied for (N.)</label>
+              <input
+                type="number"
+                id="amountApplied"
+                name="amountApplied"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="purpose">Purpose</label>
+              <input type="text" id="purpose" name="purpose" required />
+            </div>
+          </div>
+
+          <div class="inline-group">
+            <div class="form-group">
+              <label for="projectCost">Cost of project (N.)</label>
+              <input
+                type="number"
+                id="projectCost"
+                name="projectCost"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="ownContribution">Own contribution (N.)</label>
+              <input
+                type="number"
+                id="ownContribution"
+                name="ownContribution"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="inline-group">
+            <div class="form-group">
+              <label for="repaymentPeriod">Repayment period (MM)</label>
+              <input
+                type="number"
+                id="repaymentPeriod"
+                name="repaymentPeriod"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="monthlyRepayments">Monthly repayments (N.)</label>
+              <input
+                type="number"
+                id="monthlyRepayments"
+                name="monthlyRepayments"
+                required
+              />
+            </div>
+          </div>
+
+          <h3>LOANS IN BANK/S/OTHER FINANCIAL INSTITUTION(S)</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Financial Institution</th>
+                <th>Amount advanced</th>
+                <th>Date advanced</th>
+                <th>Period (MM)</th>
+                <th>Expiry Date</th>
+                <th>Outstanding amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="text" name="financialInstitution1" /></td>
+                <td><input type="number" name="amountAdvanced1" /></td>
+                <td>
+                  <input
+                    type="text"
+                    name="dateAdvanced1"
+                    placeholder="DD/MM/YY"
+                  />
+                </td>
+                <td><input type="number" name="period1" /></td>
+                <td>
+                  <input
+                    type="text"
+                    name="expiryDate1"
+                    placeholder="DD/MM/YY"
+                  />
+                </td>
+                <td><input type="number" name="outstandingAmount1" /></td>
+              </tr>
+              <tr>
+                <td><input type="text" name="financialInstitution2" /></td>
+                <td><input type="number" name="amountAdvanced2" /></td>
+                <td>
+                  <input
+                    type="text"
+                    name="dateAdvanced2"
+                    placeholder="DD/MM/YY"
+                  />
+                </td>
+                <td><input type="number" name="period2" /></td>
+                <td>
+                  <input
+                    type="text"
+                    name="expiryDate2"
+                    placeholder="DD/MM/YY"
+                  />
+                </td>
+                <td><input type="number" name="outstandingAmount2" /></td>
+              </tr>
+              <tr>
+                <td><input type="text" name="financialInstitution3" /></td>
+                <td><input type="number" name="amountAdvanced3" /></td>
+                <td>
+                  <input
+                    type="text"
+                    name="dateAdvanced3"
+                    placeholder="DD/MM/YY"
+                  />
+                </td>
+                <td><input type="number" name="period3" /></td>
+                <td>
+                  <input
+                    type="text"
+                    name="expiryDate3"
+                    placeholder="DD/MM/YY"
+                  />
+                </td>
+                <td><input type="number" name="outstandingAmount3" /></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="note">
+            (Attach bank statements of both loan accounts stated above if
+            applicable)
+          </p>
+        </section>
+
+        <!-- Section 5: Guarantors Details -->
+        <section class="form-section">
+          <h2>5 GUARANTORS DETAILS</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th>NAME</th>
+                <th>Office Address</th>
+                <th>Description</th>
+                <th>CASP Comp Nr</th>
+                <th>Telephone</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="text" name="guarantorName1" required /></td>
+                <td><input type="text" name="guarantorAddress1" required /></td>
+                <td><input type="text" name="guarantorDescription1" /></td>
+                <td><input type="text" name="guarantorCasp1" /></td>
+                <td><input type="text" name="guarantorPhone1" required /></td>
+              </tr>
+              <tr>
+                <td><input type="text" name="guarantorName2" required /></td>
+                <td><input type="text" name="guarantorAddress2" required /></td>
+                <td><input type="text" name="guarantorDescription2" /></td>
+                <td><input type="text" name="guarantorCasp2" /></td>
+                <td><input type="text" name="guarantorPhone2" required /></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="note">
+            NB: Attach Completed Guarantee Forms, Photocopy of Staff ID Cards &
+            Passport Photographs
+          </p>
+        </section>
+
+        <!-- Section 6: Association Confirmation -->
+        <section class="form-section">
+          <h2>6 ASSOCIATION CONFIRMATION</h2>
+
+          <p>
+            We confirm that the applicant is a bonafide member of the
+            association and the information contained in this application is
+            true. The association also undertakes to pay in event of default all
+            outstanding monies (Principal & Interest).
+          </p>
+
+          <div class="signature-area">
+            <div class="signature-line">
+              <div class="signature-field">
+                <label for="secretarySignature">Signed & Dated Secretary</label>
+                <input
+                  type="text"
+                  id="secretarySignature"
+                  name="secretarySignature"
+                  required
+                />
+              </div>
+
+              <div class="signature-field">
+                <label for="secretaryDate">Date</label>
+                <input
+                  type="text"
+                  id="secretaryDate"
+                  name="secretaryDate"
+                  placeholder="DD/MM/YY"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="signature-line">
+              <div class="signature-field">
+                <label for="presidentSignature">Signed & Dated President</label>
+                <input
+                  type="text"
+                  id="presidentSignature"
+                  name="presidentSignature"
+                  required
+                />
+              </div>
+
+              <div class="signature-field">
+                <label for="presidentDate">Date</label>
+                <input
+                  type="text"
+                  id="presidentDate"
+                  name="presidentDate"
+                  placeholder="DD/MM/YY"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 7: Declaration -->
+        <section class="form-section">
+          <h2>7 DECLARATION</h2>
+
+          <p>
+            I/We declare that the information given herein is true to the best
+            of my/our knowledge and belief. I/We further authorise OSAMCA to
+            verify the information given herein and make reference from any
+            person(s)/institution(s) named herein.
+          </p>
+
+          <div class="signature-area">
+            <div class="signature-line">
+              <div class="signature-field">
+                <label for="applicantSignatureName"
+                  >Name of the applicant</label
+                >
+                <input
+                  type="text"
+                  id="applicantSignatureName"
+                  name="applicantSignatureName"
+                  required
+                />
+              </div>
+
+              <div class="signature-field">
+                <label for="applicantSignature">Signature</label>
+                <input
+                  type="text"
+                  id="applicantSignature"
+                  name="applicantSignature"
+                  required
+                />
+              </div>
+
+              <div class="signature-field">
+                <label for="applicantDate">Date</label>
+                <input
+                  type="text"
+                  id="applicantDate"
+                  name="applicantDate"
+                  placeholder="DD/MM/YY"
+                  required
+                />
+              </div>
+            </div>
+
+            <h3>BUSINESS Name of director/partner/Official</h3>
+
+            <div class="signature-line">
+              <div class="signature-field">
+                <label for="official1Name">Name</label>
+                <input type="text" id="official1Name" name="official1Name" />
+              </div>
+
+              <div class="signature-field">
+                <label for="official1Signature">Signature</label>
+                <input
+                  type="text"
+                  id="official1Signature"
+                  name="official1Signature"
+                />
+              </div>
+
+              <div class="signature-field">
+                <label for="official1Date">Date</label>
+                <input
+                  type="text"
+                  id="official1Date"
+                  name="official1Date"
+                  placeholder="DD/MM/YY"
+                />
+              </div>
+            </div>
+
+            <div class="signature-line">
+              <div class="signature-field">
+                <label for="official2Name">Name</label>
+                <input type="text" id="official2Name" name="official2Name" />
+              </div>
+
+              <div class="signature-field">
+                <label for="official2Signature">Signature</label>
+                <input
+                  type="text"
+                  id="official2Signature"
+                  name="official2Signature"
+                />
+              </div>
+
+              <div class="signature-field">
+                <label for="official2Date">Date</label>
+                <input
+                  type="text"
+                  id="official2Date"
+                  name="official2Date"
+                  placeholder="DD/MM/YY"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="btn-container">
+          <button type="submit" class="btn btn-submit">
+            Submit Application
+          </button>
+          <button type="button" class="btn btn-download" id="downloadBtn">
+            Download as PDF
+          </button>
+          <button type="button" class="btn btn-reset" id="resetBtn">
+            Reset Form
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document
+        .getElementById("loanApplicationForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Basic validation
+          const requiredFields = document.querySelectorAll("input[required]");
+          let isValid = true;
+
+          requiredFields.forEach((field) => {
+            if (!field.value.trim()) {
+              isValid = false;
+              field.style.borderColor = "red";
+            } else {
+              field.style.borderColor = "#ddd";
+            }
+          });
+
+          if (isValid) {
+            document.getElementById("successMessage").style.display = "block";
+            // In a real application, you would send the data to a server here
+          } else {
+            alert("Please fill in all required fields marked in red.");
+          }
+        });
+
+      // Download as PDF functionality
+      document
+        .getElementById("downloadBtn")
+        .addEventListener("click", function () {
+          const element = document.getElementById("loanApplicationForm");
+          const successMessage = document.getElementById("successMessage");
+
+          // Hide the success message for the PDF
+          if (successMessage.style.display === "block") {
+            successMessage.style.display = "none";
+          }
+
+          // Options for PDF generation
+          const options = {
+            margin: 10,
+            filename: "OSAMCA_Loan_Application_Form.pdf",
+            image: { type: "jpeg", quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+          };
+
+          // Generate PDF
+          html2pdf()
+            .set(options)
+            .from(element)
+            .save()
+            .then(() => {
+              // Show the success message again after PDF generation
+              successMessage.style.display = "block";
+            });
+        });
+
+      // Reset form functionality
+      document
+        .getElementById("resetBtn")
+        .addEventListener("click", function () {
+          if (
+            confirm(
+              "Are you sure you want to reset the form? All entered data will be lost."
+            )
+          ) {
+            document.getElementById("loanApplicationForm").reset();
+            document.getElementById("successMessage").style.display = "none";
+
+            // Reset border colors
+            const fields = document.querySelectorAll("input, select, textarea");
+            fields.forEach((field) => {
+              field.style.borderColor = "#ddd";
+            });
+          }
+        });
+    </script>
+  </body>
+</html>
